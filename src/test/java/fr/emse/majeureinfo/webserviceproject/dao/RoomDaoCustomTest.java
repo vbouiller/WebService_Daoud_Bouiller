@@ -21,17 +21,16 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.sql.DataSource;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource("/test.properties")
-public class LightDaoCustomTest {
+public class RoomDaoCustomTest {
 
     @Autowired
-    private LightDao lightDao;
+    private RoomDao roomDao;
 
 
     @Qualifier("dataSource")
@@ -40,7 +39,7 @@ public class LightDaoCustomTest {
 
     protected static final DbSetupTracker TRACKER = new DbSetupTracker();
 
-    private static final Operation DELETE_ALL = DeleteAll.from("room","light","noise");
+    private static final Operation DELETE_ALL = DeleteAll.from("ROOM", "LIGHT", "NOISE");
 
     protected void dbSetup(Operation operation) {
         DbSetup setup = new DbSetup(new DataSourceDestination(dataSource),
@@ -56,13 +55,27 @@ public class LightDaoCustomTest {
                         .columns("id", "level")
                         .values(1L, 22)
                         .build();
-        dbSetup(light);
+
+        Operation noise =
+                Insert.into("NOISE")
+                        .withDefaultValue("status", Status.ON)
+                        .columns("id", "level")
+                        .values(1L, 22)
+                        .build();
+
+        Operation room =
+                Insert.into("ROOM")
+                        .columns("id", "light_id", "noise_id")
+                        .values(1L, 1L, 1L)
+                        .build();
+
+        dbSetup(Operations.sequenceOf(light,noise,room));
     }
 
     @Test
-    public void shouldFindOnLights() {
+    public void findRoomsWithOnLights() {
         TRACKER.skipNextLaunch();
-        assertThat(lightDao.findOnLights()).hasSize(1);
+        assertThat(roomDao.findRoomsWithOnLights()).hasSize(1);
     }
 
 
