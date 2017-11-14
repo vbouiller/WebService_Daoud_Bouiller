@@ -27,6 +27,10 @@ public class Room {
     @SuppressWarnings("unused")
     public Room(){
     }
+    public Room(Light light, Noise noise) {
+        this.light = light;
+        this.noise = noise;
+    }
 
     public void setLight(Light light) {
         this.light = light;
@@ -52,8 +56,5 @@ public class Room {
         this.id=id;
     }
 
-    public Room(Light light, Noise noise) {
-        this.light = light;
-        this.noise = noise;
-    }
+
 }
