@@ -1,18 +1,18 @@
 package fr.emse.majeureinfo.webserviceproject.web;
 
 import fr.emse.majeureinfo.webserviceproject.model.Noise;
-//import fr.emse.majeureinfo.webserviceproject.model.Status;
+import fr.emse.majeureinfo.webserviceproject.model.Status;
 
 public class NoiseDto {
 
     private final Long id;
     private final Integer level;
-    //private final Status status;
+    private final Status status;
 
     public NoiseDto(Noise noise){
         this.id=noise.getId();
         this.level=noise.getLevel();
-       // this.status=noise.getStatus();
+        this.status=noise.getStatus();
     }
 
     public Long getId() {
@@ -23,7 +23,7 @@ public class NoiseDto {
         return level;
     }
 
-   /* public Status getStatus() {
+    public Status getStatus() {
         return status;
-    }*/
+    }
 }

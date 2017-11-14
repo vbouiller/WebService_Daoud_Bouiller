@@ -14,16 +14,16 @@ public class Noise {
     @Column(nullable = false)
     private Integer level;
 
-    /*@Enumerated(EnumType.STRING)
-    private Status status;*/
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @SuppressWarnings("unused")
     public Noise(){
     }
 
-    public Noise(Integer level){//, Status status){
+    public Noise(Integer level, Status status){
         this.level=level;
-       // this.status=status;
+        this.status=status;
     }
 
     public Long getId(){
@@ -42,11 +42,11 @@ public class Noise {
         this.level = level;
     }
 
-   /* public Status getStatus() {
+    public Status getStatus() {
         return status;
     }
 
     public void setStatus(Status status) {
         this.status = status;
-    }*/
+    }
 }
