@@ -12,9 +12,9 @@ import java.io.IOException;
 
 @Component
 @WebFilter(value = "/*")
-public class SimpleCORSFilter {
+public class SimpleCORSFilter implements Filter {
 
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException{
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
         HttpServletResponse response = (HttpServletResponse) res;
         HttpServletRequest request = (HttpServletRequest) req;
@@ -25,13 +25,12 @@ public class SimpleCORSFilter {
         response.setHeader("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
         if(request.getMethod().equals(HttpMethod.OPTIONS.name())){
             response.setStatus(HttpStatus.NO_CONTENT.value());
-        } else {
-            chain.doFilter(req,res);
+        }else{
+            chain.doFilter(req, res);
         }
     }
 
     public void init(FilterConfig filterConfig) {}
 
-    public void destroy(){}
-
+    public void destroy() {}
 }
