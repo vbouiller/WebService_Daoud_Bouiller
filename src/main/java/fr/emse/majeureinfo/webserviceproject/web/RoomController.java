@@ -31,7 +31,7 @@ public class RoomController {
         return new RoomDto(roomDao.findOne(roomId));
     }
 
-    @PostMapping(path = "/switch/light", consumes = "text")
+    @PostMapping(path = "/switch/light", consumes = "text/plain")
     public RoomDto switchLight(@RequestBody String roomIdString){
 
         Long roomId = Long.parseLong(roomIdString);
@@ -44,7 +44,7 @@ public class RoomController {
         return get(roomId);
     }
 
-    @PostMapping(path = "/switch/ringer", consumes = "text")
+    @PostMapping(path = "/switch/ringer", consumes = "text/plain")
     public RoomDto switchRinger(@RequestBody String roomIdString){
         //Parsing the JSON parameter to get only the roomId
 
