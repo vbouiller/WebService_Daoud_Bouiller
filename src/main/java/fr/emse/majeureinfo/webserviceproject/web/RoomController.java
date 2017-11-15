@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -50,8 +47,10 @@ public class RoomController {
 
     @PostMapping(path = "/switch/ringer", consumes = "application/json")
     public RoomDto switchRinger(@RequestBody String roomIdString){
-
-        Long roomId = Long.parseLong(roomIdString);
+        //Parsing the JSON parameter to get only the roomId
+        StringTokenizer stringTokenizer = new StringTokenizer(roomIdString,":");
+        stringTokenizer.nextToken();
+        Long roomId = Long.parseLong(stringTokenizer.nextToken());
         Noise noise = roomDao.findOne(roomId).getNoise();
         if(noise.getStatus().equals(Status.OFF))
             noise.setStatus(Status.ON);
