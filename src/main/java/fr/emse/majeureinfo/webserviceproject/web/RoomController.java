@@ -1,15 +1,14 @@
 package fr.emse.majeureinfo.webserviceproject.web;
 
 import fr.emse.majeureinfo.webserviceproject.dao.RoomDao;
-import fr.emse.majeureinfo.webserviceproject.dao.RoomDaoImpl;
 import fr.emse.majeureinfo.webserviceproject.model.Light;
 import fr.emse.majeureinfo.webserviceproject.model.Noise;
 import fr.emse.majeureinfo.webserviceproject.model.Status;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.List;
+import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 @RestController
@@ -48,9 +47,16 @@ public class RoomController {
     @PostMapping(path = "/switch/ringer", consumes = "application/json")
     public RoomDto switchRinger(@RequestBody String roomIdString){
         //Parsing the JSON parameter to get only the roomId
-        StringTokenizer stringTokenizer = new StringTokenizer(roomIdString,":");
+
+        /*StringTokenizer stringTokenizer = new StringTokenizer(roomIdString,":");
         stringTokenizer.nextToken();
-        Long roomId = Long.parseLong(stringTokenizer.nextToken());
+        String roomString = stringTokenizer.nextToken();
+        int l = roomString.length();
+
+        Long roomId = Long.parseLong(roomString.substring(0,l-1));*/
+
+        Long roomId = Long.parseLong(roomIdString);
+
         Noise noise = roomDao.findOne(roomId).getNoise();
         if(noise.getStatus().equals(Status.OFF))
             noise.setStatus(Status.ON);
