@@ -31,31 +31,20 @@ public class RoomController {
         return new RoomDto(roomDao.findOne(roomId));
     }
 
-    @PostMapping(path = "/switch/light", consumes = "text/plain")
-    public RoomDto switchLight(@RequestBody String roomIdString){
+    @PostMapping(path = "/{roomId}/switch/light")
+    public List<RoomDto> switchLight(@PathVariable Long roomId){
 
-        Long roomId = Long.parseLong(roomIdString);
         Light light = roomDao.findOne(roomId).getLight();
         if(light.getStatus().equals(Status.OFF))
             light.setStatus(Status.ON);
         else
             light.setStatus(Status.OFF);
 
-        return get(roomId);
+        return list();
     }
 
-    @PostMapping(path = "/switch/ringer", consumes = "text/plain")
-    public RoomDto switchRinger(@RequestBody String roomIdString){
-        //Parsing the JSON parameter to get only the roomId
-
-        /*StringTokenizer stringTokenizer = new StringTokenizer(roomIdString,":");
-        stringTokenizer.nextToken();
-        String roomString = stringTokenizer.nextToken();
-        int l = roomString.length();
-
-        Long roomId = Long.parseLong(roomString.substring(0,l-1));*/
-
-        Long roomId = Long.parseLong(roomIdString);
+    @PostMapping(path = "/{roomId}/switch/ringer")
+    public List<RoomDto> switchRinger(@PathVariable Long roomId){
 
         Noise noise = roomDao.findOne(roomId).getNoise();
         if(noise.getStatus().equals(Status.OFF))
@@ -63,7 +52,7 @@ public class RoomController {
         else
             noise.setStatus(Status.OFF);
 
-        return get(roomId);
+        return list();
     }
 
     @GetMapping(value = "/light/on")
