@@ -19,5 +19,19 @@ public class RoomDaoImpl implements RoomDaoCustom {
         return query.setParameter("value", Status.ON)
                 .getResultList();
     }
+    @Override
+    public List<Room> findRoomsByLightStatus(Status st) {
+        String jpql = "select rm from Room rm JOIN rm.light lt where lt.status = :value";
+        TypedQuery<Room> query = em.createQuery(jpql, Room.class);
+        return query.setParameter("value", st)
+                .getResultList();
+    }
+    @Override
+    public List<Room> findRoomsByRingerStatus(Status st) {
+        String jpql = "select rm from Room rm JOIN rm.noise no where no.status = :value";
+        TypedQuery<Room> query = em.createQuery(jpql, Room.class);
+        return query.setParameter("value", st)
+                .getResultList();
+    }
 }
 
