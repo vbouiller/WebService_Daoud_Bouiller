@@ -4,6 +4,8 @@ import fr.emse.majeureinfo.webserviceproject.model.Light;
 import fr.emse.majeureinfo.webserviceproject.model.Noise;
 import fr.emse.majeureinfo.webserviceproject.model.Room;
 
+import java.util.Set;
+
 public class RoomDto {
 
     private final Long id;
@@ -15,6 +17,7 @@ public class RoomDto {
         this.light=room.getLight();
         this.noise=room.getNoise();
     }
+
 
     public Long getId() {
         return id;
