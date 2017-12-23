@@ -5,6 +5,7 @@ import fr.emse.majeureinfo.webserviceproject.model.Light;
 import fr.emse.majeureinfo.webserviceproject.model.Noise;
 import fr.emse.majeureinfo.webserviceproject.model.Status;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -33,7 +34,7 @@ public class RoomController {
 
     @PostMapping(path = "/{roomId}/switch/light")
     public List<RoomDto> switchLight(@PathVariable Long roomId){
-
+        RestTemplate restTemplate = new RestTemplate();
         Light light = roomDao.findOne(roomId).getLight();
         if(light.getStatus().equals(Status.OFF))
             light.setStatus(Status.ON);
