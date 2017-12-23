@@ -77,6 +77,16 @@ public class RoomDaoCustomTest {
         TRACKER.skipNextLaunch();
         assertThat(roomDao.findRoomsWithOnLights()).hasSize(1);
     }
+    @Test
+    public void findRoomsByLightStatus() {
+        TRACKER.skipNextLaunch();
+        assertThat(roomDao.findRoomsByLightStatus(Status.OFF)).hasSize(1);
+    }
+    @Test
+    public void findRoomsByRingerStatus() {
+        TRACKER.skipNextLaunch();
+        assertThat(roomDao.findRoomsByRingerStatus(Status.OFF)).hasSize(1);
+    }
 
 
 }

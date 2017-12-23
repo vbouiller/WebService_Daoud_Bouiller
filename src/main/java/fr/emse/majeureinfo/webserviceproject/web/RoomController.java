@@ -55,9 +55,14 @@ public class RoomController {
         return list();
     }
 
-    @GetMapping(value = "/light/on")
-    public List<RoomDto> listWithOnLight(){
-        return roomDao.findRoomsWithOnLights().stream().map(RoomDto::new).collect(Collectors.toList());
+    @GetMapping(value = "/light/{status}")
+    public List<RoomDto> listWithLightStatus(@PathVariable Status status){
+        return roomDao.findRoomsByLightStatus(status).stream().map(RoomDto::new).collect(Collectors.toList());
+    }
+
+    @GetMapping(value = "/ringer/{status}")
+    public List<RoomDto> listWithRingerStatus(@PathVariable Status status){
+        return roomDao.findRoomsByRingerStatus(status).stream().map(RoomDto::new).collect(Collectors.toList());
     }
 
 

@@ -20,5 +20,11 @@ public class LightDaoImpl implements LightDaoCustom {
         return query.setParameter("value", Status.ON)
                 .getResultList();
     }
+    public List<Light> findLightsByStatus(Status st) {
+        String jpql = "select lt from Light lt where lt.status = :value";
+        TypedQuery<Light> query = em.createQuery(jpql, Light.class);
+        return query.setParameter("value", st)
+                .getResultList();
+    }
 }
 
