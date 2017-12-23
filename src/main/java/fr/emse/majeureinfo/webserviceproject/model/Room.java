@@ -11,6 +11,14 @@ public class Room {
     @Id
     @GeneratedValue
     private Long id;
+
+
+    /**
+     *  The room belongs to a building
+     */
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Building building;
+
     /**
      * The Light of a room
      */
@@ -27,9 +35,18 @@ public class Room {
     @SuppressWarnings("unused")
     public Room(){
     }
-    public Room(Light light, Noise noise) {
+    public Room(Building building, Light light, Noise noise) {
+        this.building = building;
         this.light = light;
         this.noise = noise;
+    }
+
+    public Building getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(Building building) {
+        this.building = building;
     }
 
     public void setLight(Light light) {
