@@ -13,16 +13,19 @@ import java.util.stream.Collectors;
 public class BuildingDto {
 
     private final Long id;
+    private final String name;
     private final Set<Room> rooms;
 
     public BuildingDto(Building building){
         this.id=building.getId();
         this.rooms=building.getRooms();
+        this.name=building.getName();
     }
 
     public Long getId() {
         return id;
     }
+    public String getName(){ return name;}
 
     public List<RoomDto> getRooms() {
         return rooms.stream().map(RoomDto::new).collect(Collectors.toList());
