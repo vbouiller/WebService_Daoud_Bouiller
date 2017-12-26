@@ -1,6 +1,7 @@
 package fr.emse.majeureinfo.webserviceproject.dao;
 
 
+import fr.emse.majeureinfo.webserviceproject.model.Building;
 import fr.emse.majeureinfo.webserviceproject.model.Room;
 import fr.emse.majeureinfo.webserviceproject.model.Status;
 
@@ -19,25 +20,38 @@ public class BuildingDaoImpl implements BuildingDaoCustom {
     }
 
     @Override
-    public List<Room> countRoomsWithLightOn() {
-        String jpql = "select rm from Building";
+    public List<Building> countRoomsWithLightOn() {
+        String jpql = "select b,count (rm) from Building b,IN(  b.rooms)as rm JOIN rm.light lt where lt.status = :value group by b";
+        TypedQuery<Building> query = em.createQuery(jpql, Building.class);
+        return query.setParameter("value", Status.ON).getResultList();
+    }
+
+    @Override
+    public List<Building> countRoomsWithRingerOn() {
+
+        String jpql = "select b,count (rm) from Building b,IN(  b.rooms)as rm JOIN rm.noise n where n.status = :value group by b";
+        TypedQuery<Building> query = em.createQuery(jpql, Building.class);
+        return query.setParameter("value", Status.ON).getResultList();
+        //return findRoomsByNoiseStatus(Status.ON,bid).size();
+    }
+
+    @Override
+    public List<Room> findRoomsByLightStatus(Status status, Long BuildingId) {
+
+        String jpql = "select rm from Building b,IN(  b.rooms)as rm JOIN rm.light lt where lt.status = :value and b.id= :Bid";
         TypedQuery<Room> query = em.createQuery(jpql, Room.class);
-        return query.getResultList();
+        return query.setParameter("value", status).setParameter("Bid",BuildingId)
+                .getResultList();
+
     }
 
     @Override
-    public List<Room> countRoomsWithRingerOn() {
-        return null;
-    }
+    public List<Room> findRoomsByNoiseStatus(Status status, Long BuildingId) {
+        String jpql = "select rm from Building b,IN(  b.rooms)as rm JOIN rm.noise n where n.status = :value and b.id= :Bid";
+        TypedQuery<Room> query = em.createQuery(jpql, Room.class);
+        return query.setParameter("value", status).setParameter("Bid",BuildingId)
+                .getResultList();
 
-    @Override
-    public List<Room> findRoomsByLightStatus(Status status) {
-        return null;
-    }
-
-    @Override
-    public List<Room> findRoomsByNoiseStatus(Status status) {
-        return null;
     }
 
 

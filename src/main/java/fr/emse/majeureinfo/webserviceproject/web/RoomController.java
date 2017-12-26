@@ -1,5 +1,6 @@
 package fr.emse.majeureinfo.webserviceproject.web;
 
+import fr.emse.majeureinfo.webserviceproject.dao.BuildingDao;
 import fr.emse.majeureinfo.webserviceproject.dao.RoomDao;
 import fr.emse.majeureinfo.webserviceproject.model.Light;
 import fr.emse.majeureinfo.webserviceproject.model.Noise;
@@ -9,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 @RestController
@@ -17,9 +17,11 @@ import java.util.stream.Collectors;
 @Transactional
 public class RoomController {
     private final RoomDao roomDao;
+    private final BuildingDao buildingDao;
 
-    public RoomController(RoomDao roomDao){
+    public RoomController(RoomDao roomDao, BuildingDao buildingDao){
         this.roomDao=roomDao;
+        this.buildingDao = buildingDao;
     }
 
     @GetMapping
@@ -64,6 +66,10 @@ public class RoomController {
     @GetMapping(value = "/ringer/{status}")
     public List<RoomDto> listWithRingerStatus(@PathVariable Status status){
         return roomDao.findRoomsByRingerStatus(status).stream().map(RoomDto::new).collect(Collectors.toList());
+    }
+    @GetMapping(value ="/building/{Bid}")
+    public List<RoomDto> listByBuilding(@PathVariable Long Bid){
+        return  buildingDao.findOne(Bid).getRooms().stream().map(RoomDto::new).collect(Collectors.toList());
     }
 
 

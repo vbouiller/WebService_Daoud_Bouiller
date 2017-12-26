@@ -30,14 +30,15 @@ public class BuildingController {
         return new BuildingDto(
                 buildingDao.findOne(buildingId));
     }
-    @GetMapping(value = "/light/{status}")
-    public List<RoomDto> listWithLightStatus(@PathVariable Status status){
-        return buildingDao.findRoomsByLightStatus(status).stream().map(RoomDto::new).collect(Collectors.toList());
+    @GetMapping(value = "/{buildingId}/light/{status}")
+    public List<RoomDto> listWithLightStatus(@PathVariable Status status,@PathVariable Long buildingId){
+        return buildingDao.findRoomsByLightStatus(status,buildingId).stream().map(RoomDto::new).collect(Collectors.toList());
     }
 
-    @GetMapping(value = "/ringer/{status}")
-    public List<RoomDto> listWithRingerStatus(@PathVariable Status status){
-        return buildingDao.findRoomsByNoiseStatus(status).stream().map(RoomDto::new).collect(Collectors.toList());
+    @GetMapping(value = "/{buildingId}/ringer/{status}")
+    public List<RoomDto> listWithRingerStatus(@PathVariable Status status,@PathVariable Long buildingId){
+        return buildingDao.findRoomsByNoiseStatus(status,buildingId).stream().map(RoomDto::new).collect(Collectors.toList());
     }
+
 
 }
