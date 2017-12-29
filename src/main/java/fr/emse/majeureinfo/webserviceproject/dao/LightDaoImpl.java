@@ -6,6 +6,7 @@ import fr.emse.majeureinfo.webserviceproject.model.Status;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -32,10 +33,10 @@ public class LightDaoImpl implements LightDaoCustom {
     public void turnAllLights(Status st) {
         Status revers= Status.ON;
         if (st.equals(Status.ON))revers=Status.OFF;
-        String jpql = "update lt from Light lt set lt.status=:rev where lt.status = :value";
-        TypedQuery<Light> query = em.createQuery(jpql, Light.class);
+        String jpql = "update Light lt set lt.status=:rev where lt.status = :value";
+        Query query = em.createQuery(jpql);
         query.setParameter("value", st).setParameter("rev",revers)
-                .getResultList();
+                .executeUpdate();//.getResultList();
     }
 
 
