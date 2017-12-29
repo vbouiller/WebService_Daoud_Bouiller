@@ -39,7 +39,7 @@ public class RoomDaoCustomTest {
 
     protected static final DbSetupTracker TRACKER = new DbSetupTracker();
 
-    private static final Operation DELETE_ALL = DeleteAll.from("ROOM", "LIGHT", "NOISE");
+    private static final Operation DELETE_ALL = DeleteAll.from("BUILDING_ROOMS","ROOM", "LIGHT", "NOISE","BUILDING");
 
     protected void dbSetup(Operation operation) {
         DbSetup setup = new DbSetup(new DataSourceDestination(dataSource),
@@ -73,19 +73,23 @@ public class RoomDaoCustomTest {
     }
 
     @Test
-    public void findRoomsWithOnLights() {
+    public void shouldFindRoomsWithOnLights() {
         TRACKER.skipNextLaunch();
         assertThat(roomDao.findRoomsWithOnLights()).hasSize(1);
     }
     @Test
-    public void findRoomsByLightStatus() {
+    public void shouldFindRoomsByLightStatus() {
         TRACKER.skipNextLaunch();
-        assertThat(roomDao.findRoomsByLightStatus(Status.OFF)).hasSize(1);
+        assertThat(roomDao.findRoomsByLightStatus(Status.OFF)).hasSize(0);
+        assertThat(roomDao.findRoomsByLightStatus(Status.ON)).hasSize(1);
+
     }
     @Test
-    public void findRoomsByRingerStatus() {
+    public void shouldFindRoomsByRingerStatus() {
         TRACKER.skipNextLaunch();
-        assertThat(roomDao.findRoomsByRingerStatus(Status.OFF)).hasSize(1);
+        assertThat(roomDao.findRoomsByRingerStatus(Status.ON)).hasSize(1);
+        assertThat(roomDao.findRoomsByRingerStatus(Status.OFF)).hasSize(0);
+
     }
 
 

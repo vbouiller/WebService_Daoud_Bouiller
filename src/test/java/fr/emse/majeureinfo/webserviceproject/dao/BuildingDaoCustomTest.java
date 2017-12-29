@@ -21,17 +21,16 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.sql.DataSource;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource("/test.properties")
-public class LightDaoCustomTest {
+public class BuildingDaoCustomTest {
 
     @Autowired
-    private LightDao lightDao;
+    private BuildingDao buildingDao;
 
 
     @Qualifier("dataSource")
@@ -56,33 +55,69 @@ public class LightDaoCustomTest {
                         .columns("id", "level")
                         .values(1L, 22)
                         .build();
-        dbSetup(light);
+
+        Operation noise =
+                Insert.into("NOISE")
+                        .withDefaultValue("status", Status.ON)
+                        .columns("id", "level")
+                        .values(1L, 22)
+                        .build();
+
+        Operation room =
+                Insert.into("ROOM")
+                        .columns("id", "light_id", "noise_id")
+                        .values(1L, 1L, 1L)
+                        .build();
+
+        Operation building =
+                Insert.into("BUILDING")
+                    .columns("id","name")
+                    .values("1","campus1")
+                    .build();
+
+        Operation building_room =
+                Insert.into("BUILDING_ROOMS")
+                    .columns("BUILDING_ID", "ROOMS_ID")
+                    .values("1","1")
+                    .build();
+
+
+        dbSetup(Operations.sequenceOf(light,noise,room,building,building_room));
+    }
+
+//    @Test
+//    public void shouldCountRooms() {
+//        TRACKER.skipNextLaunch();
+//        assertThat(buildingDao.countRooms()).hasSize(1);
+//    }
+
+    @Test
+    public void shouldCountRoomsWithLightOn(){
+        TRACKER.skipNextLaunch();
+        assertThat(buildingDao.countRoomsWithLightOn()).hasSize(1);
     }
 
     @Test
-    public void shouldFindOnLights() {
+    public void shouldCountRoomsWithRingerOn(){
         TRACKER.skipNextLaunch();
-        assertThat(lightDao.findOnLights()).hasSize(1);
+        assertThat(buildingDao.countRoomsWithRingerOn()).hasSize(1);
     }
 
     @Test
-    public void shouldFindLightsByStatus() {
+    public void shouldFindRoomsByLightStatus(){
         TRACKER.skipNextLaunch();
-        assertThat(lightDao.findLightsByStatus(Status.ON)).hasSize(1);
-        assertThat(lightDao.findLightsByStatus(Status.OFF)).hasSize(0);
+        assertThat(buildingDao.findRoomsByLightStatus(Status.OFF,1L)).hasSize(0);
+        assertThat(buildingDao.findRoomsByLightStatus(Status.ON,1L)).hasSize(1);
+
     }
 
     @Test
-    public void shouldTurnAllLights() {
+    public void shouldFindRoomsByLNoiseStatus(){
         TRACKER.skipNextLaunch();
-        assertThat(lightDao.findOnLights()).hasSize(1);
-        lightDao.turnAllLights(Status.ON);
-        assertThat(lightDao.findOnLights()).hasSize(0);
+        assertThat(buildingDao.findRoomsByNoiseStatus(Status.OFF,1L)).hasSize(0);
+        assertThat(buildingDao.findRoomsByNoiseStatus(Status.ON,1L)).hasSize(1);
+
     }
-
-
-
-
 
 }
 
