@@ -62,4 +62,18 @@ public class Building {
     public void setName(String name) {
         this.name = name;
     }
+    public int Num_On_Light(){
+        int i=0;
+        for (Room room:rooms) {
+            if(room.getLight().getStatus().equals(Status.ON))i++;
+        }
+        return i;
+    }
+    public int Num_On_Ringer(){
+        int i=0;
+        for (Room room:rooms) {
+            if(room.getNoise().getStatus().equals(Status.ON))i++;
+        }
+        return i;
+    }
 }

@@ -1,9 +1,11 @@
 package fr.emse.majeureinfo.webserviceproject.web;
 
 import fr.emse.majeureinfo.webserviceproject.dao.BuildingDao;
+import fr.emse.majeureinfo.webserviceproject.dao.LightDao;
 import fr.emse.majeureinfo.webserviceproject.dao.RoomDao;
 import fr.emse.majeureinfo.webserviceproject.model.Light;
 import fr.emse.majeureinfo.webserviceproject.model.Noise;
+import fr.emse.majeureinfo.webserviceproject.model.Room;
 import fr.emse.majeureinfo.webserviceproject.model.Status;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -18,10 +20,12 @@ import java.util.stream.Collectors;
 public class RoomController {
     private final RoomDao roomDao;
     private final BuildingDao buildingDao;
+    private final LightDao lightDao;
 
-    public RoomController(RoomDao roomDao, BuildingDao buildingDao){
+    public RoomController(RoomDao roomDao, BuildingDao buildingDao,LightDao lightDao){
         this.roomDao=roomDao;
         this.buildingDao = buildingDao;
+        this.lightDao =  lightDao;
     }
 
     @GetMapping
@@ -43,6 +47,30 @@ public class RoomController {
         else
             light.setStatus(Status.OFF);
 
+        return list();
+    }
+    @PostMapping(path = "/switch/lights/{status}")
+    public List<RoomDto> switchAllLight(@PathVariable Status status){
+        Status newSt=Status.ON;
+        if(status.equals(Status.ON))newSt=Status.OFF;
+        List<Room> toChange=roomDao.findRoomsByLightStatus(status);
+        for (Room room:toChange) {
+            room.getLight().setStatus(newSt);
+        }
+        //RestTemplate restTemplate = new RestTemplate();
+        //lightDao.turnAllLights(status);
+        return list();
+    }
+    @PostMapping(path = "/switch/ringers/{status}")
+    public List<RoomDto> switchAllRingers(@PathVariable Status status){
+        Status newSt=Status.ON;
+        if(status.equals(Status.ON))newSt=Status.OFF;
+        List<Room> toChange=roomDao.findRoomsByRingerStatus(status);
+        for (Room room:toChange) {
+            room.getNoise().setStatus(newSt);
+        }
+        //RestTemplate restTemplate = new RestTemplate();
+        //lightDao.turnAllLights(status);
         return list();
     }
 

@@ -22,7 +22,7 @@ public class BuildingController {
     }
     @GetMapping
     public List<BuildingDto> list(){
-        return buildingDao.findAll().stream().map(BuildingDto::new).collect(Collectors.toList());
+        return buildingDao.findAll().stream().map(building -> new BuildingDto(building)).collect(Collectors.toList());
     }
 
     @GetMapping(value = "/{buildingId}")
