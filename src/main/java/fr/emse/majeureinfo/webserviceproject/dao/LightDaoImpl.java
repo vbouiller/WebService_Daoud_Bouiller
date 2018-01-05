@@ -39,6 +39,18 @@ public class LightDaoImpl implements LightDaoCustom {
                 .executeUpdate();//.getResultList();
     }
 
+    @Override
+    public void updateLights(int id, int level, Boolean status1){
+        Status status;
+        if (status1 ) status = Status.ON;
+        else status = Status.OFF;
+
+        String jpql = "update Light lt set lt.status=:statusValue, lt.level =:levelValue where lt.id = :idValue";
+        Query query = em.createQuery(jpql);
+        query.setParameter("idValue", id).setParameter("statusValue",status).setParameter("levelValue",level)
+                .executeUpdate();
+    }
+
 
 }
 

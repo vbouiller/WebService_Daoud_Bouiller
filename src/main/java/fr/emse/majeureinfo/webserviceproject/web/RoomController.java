@@ -8,7 +8,9 @@ import fr.emse.majeureinfo.webserviceproject.model.Noise;
 import fr.emse.majeureinfo.webserviceproject.model.Room;
 import fr.emse.majeureinfo.webserviceproject.model.Status;
 import fr.emse.majeureinfo.webserviceproject.mqtt.MqttConnector;
-import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -112,6 +114,22 @@ public class RoomController {
     @GetMapping(value ="/building/{Bid}")
     public List<RoomDto> listByBuilding(@PathVariable Long Bid){
         return  buildingDao.findOne(Bid).getRooms().stream().map(RoomDto::new).collect(Collectors.toList());
+    }
+
+    @PostMapping(value = "/PHueRefresh")
+    public void getPhilipsHueData(@RequestBody JSONArray pHueLights){
+        int arrayLength = pHueLights.length();
+        int count = 0;
+
+        try {
+            while (count < arrayLength) {
+                JSONObject light = pHueLights.getJSONObject(count);
+                lightDao.updateLights(light.getInt("id"),light.getInt("level"), light.getBoolean("status") );
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
