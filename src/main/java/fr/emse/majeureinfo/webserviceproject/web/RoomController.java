@@ -10,6 +10,8 @@ import fr.emse.majeureinfo.webserviceproject.model.Status;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import fr.emse.majeureinfo.webserviceproject.mqtt.MqttConnector;
+import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,6 +27,7 @@ public class RoomController {
     private final RoomDao roomDao;
     private final BuildingDao buildingDao;
     private final LightDao lightDao;
+    String topic ="philipshue/";
 
     public RoomController(RoomDao roomDao, BuildingDao buildingDao,LightDao lightDao){
         this.roomDao=roomDao;
@@ -46,10 +49,19 @@ public class RoomController {
     public List<RoomDto> switchLight(@PathVariable Long roomId){
         RestTemplate restTemplate = new RestTemplate();
         Light light = roomDao.findOne(roomId).getLight();
+
+        String currenttopic =topic+light.getId();
+
         if(light.getStatus().equals(Status.OFF))
+        {
             light.setStatus(Status.ON);
+            MqttConnector.publish(currenttopic,"on");
+        }
         else
+        {
             light.setStatus(Status.OFF);
+            MqttConnector.publish(currenttopic,"off");
+        }
 
         return list();
     }
@@ -60,6 +72,8 @@ public class RoomController {
         List<Room> toChange=roomDao.findRoomsByLightStatus(status);
         for (Room room:toChange) {
             room.getLight().setStatus(newSt);
+            MqttConnector.publish(topic+room.getLight().getId(),newSt.toString().toLowerCase());
+
         }
         //RestTemplate restTemplate = new RestTemplate();
         //lightDao.turnAllLights(status);
