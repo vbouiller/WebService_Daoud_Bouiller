@@ -24,7 +24,7 @@ public class RoomController {
     private final BuildingDao buildingDao;
     private final LightDao lightDao;
     MqttClient client=null;
-    String topic ="/philipshue/";
+    String topic ="philipshue/";
 
     public RoomController(RoomDao roomDao, BuildingDao buildingDao,LightDao lightDao){
         this.roomDao=roomDao;
