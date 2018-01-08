@@ -7,7 +7,7 @@ import org.eclipse.paho.client.mqttv3.*;
 
 public class MqttThread implements  Runnable {
     String broker="tcp://m23.cloudmqtt.com:13655";
-    String philipshue="/philipshue/";
+    String philipshue="philipshue/";
     MqttClient client=null;
 
     private Thread thread;
