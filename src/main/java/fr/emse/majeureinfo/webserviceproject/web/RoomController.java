@@ -23,7 +23,6 @@ public class RoomController {
     private final RoomDao roomDao;
     private final BuildingDao buildingDao;
     private final LightDao lightDao;
-    MqttClient client=null;
     String topic ="philipshue/";
 
     public RoomController(RoomDao roomDao, BuildingDao buildingDao,LightDao lightDao){
@@ -52,12 +51,12 @@ public class RoomController {
         if(light.getStatus().equals(Status.OFF))
         {
             light.setStatus(Status.ON);
-            MqttConnector.publish(client,currenttopic,"on");
+            MqttConnector.publish(currenttopic,"on");
         }
         else
         {
             light.setStatus(Status.OFF);
-            MqttConnector.publish(client,currenttopic,"off");
+            MqttConnector.publish(currenttopic,"off");
         }
 
         return list();
@@ -69,7 +68,7 @@ public class RoomController {
         List<Room> toChange=roomDao.findRoomsByLightStatus(status);
         for (Room room:toChange) {
             room.getLight().setStatus(newSt);
-            MqttConnector.publish(client,topic+room.getLight().getId(),newSt.toString().toLowerCase());
+            MqttConnector.publish(topic+room.getLight().getId(),newSt.toString().toLowerCase());
 
         }
         //RestTemplate restTemplate = new RestTemplate();

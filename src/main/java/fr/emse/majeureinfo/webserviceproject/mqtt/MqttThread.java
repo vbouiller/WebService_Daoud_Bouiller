@@ -3,7 +3,7 @@ package fr.emse.majeureinfo.webserviceproject.mqtt;
 import org.eclipse.paho.client.mqttv3.*;
 
 
-
+/*
 
 public class MqttThread implements  Runnable {
     String broker="tcp://m23.cloudmqtt.com:13655";
@@ -31,4 +31,4 @@ public class MqttThread implements  Runnable {
 
 
 
-}
+}*/

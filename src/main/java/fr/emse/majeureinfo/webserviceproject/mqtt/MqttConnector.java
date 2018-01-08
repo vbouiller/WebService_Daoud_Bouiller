@@ -4,7 +4,11 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 public class MqttConnector {
-    public static void Connection(String broker, MqttClient client, String topic, String message){
+
+    public static MqttClient client = null;
+
+
+    public static void Connection(String broker, String topic){
 
         try {
 
@@ -44,7 +48,7 @@ public class MqttConnector {
 
 
             client.connect(options);
-            client.subscribe("#");
+            client.subscribe(topic);
 
         } catch (MqttException e) {
             e.printStackTrace();
@@ -61,28 +65,21 @@ public class MqttConnector {
         } catch (MqttException e) {
             e.printStackTrace();
         }
+
+
     }
+
     protected static void handleNewMessage(String topic, String message){
         System.out.println(topic + ": " + message);
-
-
     }
-    public static void publish(MqttClient client, String topic, String message){
+
+    public static void publish(String topic, String message){
+        if(client == null){
+            Connection("tcp://m23.cloudmqtt.com:13655","#");
+        }
+
         try {
 
-            //Instantiate MqttClient
-            client = new MqttClient(
-                    "tcp://m23.cloudmqtt.com:13655", //URI
-                    MqttClient.generateClientId(), //ClientId
-                    new MemoryPersistence()); //Persistence
-
-            // Connection credentials
-            MqttConnectOptions options = new MqttConnectOptions();
-                /*options.setUserName("mxasjcaz");
-                options.setPassword("6YcXZea6Z1eu".toCharArray());*/
-            options.setUserName("mqttApiAccount");
-            options.setPassword("hYZO!72dja".toCharArray());
-            client.connect(options);
             //message
             MqttMessage msg = new MqttMessage(message.getBytes());
             msg.setQos(2);
