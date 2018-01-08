@@ -116,7 +116,7 @@ public class RoomController {
         return  buildingDao.findOne(Bid).getRooms().stream().map(RoomDto::new).collect(Collectors.toList());
     }
 
-    @PostMapping(value = "/PHueRefresh")
+    @GetMapping(value = "/PHueRefresh")
     public void getPhilipsHueData(@RequestBody JSONArray pHueLights){
         int arrayLength = pHueLights.length();
         int count = 0;
